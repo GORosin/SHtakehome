@@ -1,5 +1,7 @@
 To use this program, put it in the same directory as your target JSON file(s), then run the program with the JSON file(s) as the parameter. It must include the .json extension to work.
+
 i.e. > Python takehome.py 261150758_CentinelaHospitalMedicalCenter_standardcharges.json
+
 Multiple JSON files may be converted consecutively by writing all of them as parameters.
 
 Once a JSON is loaded, the program iterates through the json rows and appends specific data into a list. This data includes procedure name, code, code type, charge, insurance payer and rate. A separate list contains possible variations of those names and then looks for at least one of each in the JSON data. Once all six are found, the list is written into a row in the CSV.
