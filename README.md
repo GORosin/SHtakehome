@@ -1,61 +1,14 @@
-# Serif Health Takehome Interview
+To use this program, put it in the same directory as your target JSON file(s), then run the program with the JSON file(s) as the parameter. It must include the .json extension to work.
+i.e. > Python takehome.py 261150758_CentinelaHospitalMedicalCenter_standardcharges.json
+Multiple JSON files may be converted consecutively by writing all of them as parameters.
 
-This repository contains the files and instructions for our takehome engineering interview. Please *locally* copy to your own public repo or [import](https://github.com/new/import) to your github account for use in sharing solutions back to us. Direct public forks and pull requests will expose your identity and solution to other candidates also working on this interview question, and we want the interview process to be fair for everyone. 
+Once a JSON is loaded, the program iterates through the json rows and appends specific data into a list. This data includes procedure name, code, code type, charge, insurance payer and rate. A separate list contains possible variations of those names and then looks for at least one of each in the JSON data. Once all six are found, the list is written into a row in the CSV.
 
-## Context
-Serif Health was founded with a mission to make the US healthcare system more transparent, efficient, and affordable for everyone. One of the challenging problems we're solving at Serif Health is making healthcare *pricing* data transparent and uniform for all market participants. There are myriad reasons this is difficult.
+One of the main challenges of this program is making it deal with two differently formatted JSON files. One possible solution is to simply have an if condition checking the file name, but that is cumbersome and not very modular to different files. Another way is to look for they key containing the main data: StandardCharges. If the file has this key, the program will look for it and unpack it's contents (after the sub-key CDM). If it doesn't find this key, it will use indices to find the content (as that is how the second file is formatted).
 
-At the macro level:
-- Data in healthcare is protected by law, sensitive by default and tends to be locked up in proprietary systems or data formats.
-- The data aggregators and clearinghouses that do have access to clean, normalized bulk data assets tend to employ extremely expensive and restrictive licensing terms. 
-- Recent price transparency laws have required hospitals to publish their pricing, data sharing occurs at varying levels of completeness and consistency, and hospitals are only a fraction of the overall healthcare market.  
+Planning, writing, testing, and documenting this program took about 3 hours. Some uncertainty about how to convert the Insurance Rates data in particular into CSV format was time consuming and the end solution was to create a new row for each insurance listed in a JSON object.
 
-At the micro level:
-- Medical billing and coding for a specific procedures can very complicated and is contingent on place of service, comorbidities, and structure of insurance arrangements. 
-- Insurance companies (payers) establish pre-negotiated non-published contracted rates with each facility, physician group, or health system that reimburses the healthcare provider at a rate very different from what is 'charged'. 
-
-Summed together, all this complexity contributes to a general lack of transparency and market efficency in our healthcare system.
-
-
-## Objective
-Our customers typically want to know and compare reimbursement rates for healthcare services from specific payers. As mentioned earlier, one public data source for reimbursement rates is hospital price transparency files - most hospitals at this point are at least partially compliant publishing their reimbursement rates. Unfortunately, those files do not come in a standardized format. 
-
-The objective for this takehome is to write a script that can take the data from a couple of hospital price transparency files, parse them, and transform them to a normalized format we can ingest and leverage in our data warehouse for aggregation, search, and display. 
-
-
-## Inputs
-The input to this takehome are two JSON format hospital price files from different healthcare systems. A typical 'price' entity in these files consists of a procedure name, procedure code, procedure code type, gross charge (what is billed to the payer), and reimbursement rate (the mean rate actually paid out under the established contract). 
-
-[Centinela Hospital](https://www.centinelamed.com/261150758_CentinelaHospitalMedicalCenter_standardcharges.json)
-
-[Advent Health Shawnee Mission Hospital](https://www.adventhealth.com/sites/default/files/CDM/2022/480637331_AdventHealthShawneeMission_standardcharges.json)
-
-You should write code that can read in these two files (it's ok to copy them locally / assume on local disk if easier to work with), extract the price entities contained within, and convert the data into the requested output format below. 
-
-## Outputs
-Your output should be one CSV file per input file (two CSV files total) with the following header columns:
-`Procedure Code, Procedure Code Type, Procedure Name, Gross Charge, Insurance Payer Name, Insurance Rate`
-
-You should extract as many of these 'price' rows as you can *without duplicating entries* and *ignoring empty or malformed data fields* (denoted by 'N/A', empty strings, etc.). 
-
-For simplicity's sake you may ignore complicating factors and fields like modifiers, inpatient/outpatient status, provider specialities, facility types and other details that might be in the file.
-
-
-### Deliverable
-You should send us a link to a public repository or zip file that contains at miminum:
-1. The script or code used to parse the file and produce output. 
-2. The setup or packaging file(s) required to bootstrap and execute your solution code
-3. The two CSV output files generated by your code
-4. A README file, explaining your solution, how long it took you to write, and the tradeoffs you made along the way. 
-
-## Expectations
-### Time vs Quality
-We are a small engineering team with limited resources, and often have to make hard tradeoffs to meet deadlines and make rapid forward progress. We do not want this takehome to take more than a few hours out of your day. So, please timebox coding your solution to two hours max, and know that you have the opportunity to discuss the tradeoffs you made when submitting your solution. Experienced engineers should be able to complete the coding portion in about an hour. If you think this will take you dramatically more time than that, let us know before starting the takehome so we can discuss why. If you don't believe code produced in that timeframe can ever be considered production-worthy, an early-stage startup might not be the best environment for you. 
-
-If you finish early, we'd recommend adding additional notes or commentary to the README (e.g. discussion of performance characteristics, how you would ideally test/deploy/run your code in a production environment, feature iterations that might come next, so on), but please don't exceed the timebox doing so. 
-
-### Language Choice
-You can choose any language you want, but your solution should be portable enough to run on someone else's machine. 
-
-### Dependencies
-You can and *probably should* use dependencies (JSON parsers, type validators, etc) and libraries from public package managers in your language of choice. Again, your solution should be portable enough to run on someone else's machine, so if you leverage packaged dependencies this please make sure relevant setup instructions to install the dependencies and execute the solution are included.
+resources used:
+https://www.w3schools.com/python/python_json.asp
+https://docs.python.org/3/library/csv.html
+https://realpython.com/iterate-through-dictionary-python/
